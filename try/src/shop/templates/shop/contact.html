@@ -1,0 +1,76 @@
+{% extends 'shop/basic.html' %}
+
+{% block title %} Contact Us {% endblock %}
+{% block body %} 
+<div class="container my-3">
+    <h3>Contact Us </h3>
+<form action="/shop/contact/" method="post">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input type="text" class="form-control" id="name" name="name"  placeholder="Enter Your Name">
+    </div>
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" class="form-control" id="email" name="email" placeholder="Enter Your Email Address">
+      </div>
+      <div class="form-group">
+        <label for="phone">Phone</label>
+        <input type="tel" class="form-control" id="phone" name="phone"  placeholder="Enter Your Phone">
+      </div>
+      
+    <div class="form-group">
+      <label for="desc">How can we help you?</label>
+      <textarea class="form-control" id="desc" name="desc" rows="3"></textarea>
+    </div>
+    <div>
+    <button type="submit" class="btn btn-success">Success</button>
+    </div>
+  </form>
+  </div>
+
+
+{% endblock %}
+
+
+
+{% block js %}
+<script>
+  
+if (localStorage.getItem('cart') == null) {
+    var cart = {};
+} else {
+    cart = JSON.parse(localStorage.getItem('cart'));
+}
+console.log(cart);
+var sum = 0;
+var tp=0
+if ($.isEmptyObject(cart)) {
+    //if object is empty
+    mystr = `<p>Your cart is empty, please add some items to your cart before checking out!</p>`
+    $('#items').append(mystr);
+} else {
+    for (item in cart) {
+        let name = cart[item][1];
+        let qty = cart[item][0];
+        let i=cart[item][2]
+        sum = sum + qty;
+        tp=tp+qty*i
+        mystr = `<li class="list-group-item d-flex justify-content-between align-items-center">
+                    ${name}
+                    <span class="badge badge-primary badge-pill">${qty}</span>
+                </li>`
+        $('#items').append(mystr);
+    }
+}
+document.getElementById('cart').innerHTML = sum;
+document.getElementById('totalPrice').innerHTML = tp
+
+  {% if thank %}
+  alert('Thank You for contacting us.We will get back with you soon')
+  document.location = "/shop/contact";
+  {% endif %}
+  
+
+</script>
+{% endblock %}
